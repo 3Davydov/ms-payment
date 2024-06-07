@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/3Davydov/ms-payment/config"
 	"github.com/3Davydov/ms-payment/internal/application/core/api"
 	"github.com/3Davydov/ms-proto/golang/payment"
 	"google.golang.org/grpc"

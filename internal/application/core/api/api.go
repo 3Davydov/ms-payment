@@ -1,7 +1,30 @@
 package api
 
-import "github.com/3Davydov/ms-payment/internal/application/core/domain"
+import (
+	"context"
+	"fmt"
+
+	"github.com/3Davydov/ms-payment/internal/application/core/domain"
+	"github.com/3Davydov/ms-payment/internal/ports"
+)
 
 type API interface {
-	Charge(payment domain.Payment)
+	Charge(ctx context.Context, payment domain.Payment) (domain.Payment, error)
+}
+
+type Application struct {
+	db ports.DBPort
+}
+
+func NewApplication(db ports.DBPort) *Application {
+	return &Application{db: db}
+}
+
+func (a Application) Charge(ctx context.Context, payment domain.Payment) (domain.Payment, error) {
+	err := a.db.Save(ctx, &payment)
+	if err != nil {
+		fmt.Println("ERROR") // TODO delete
+		return domain.Payment{}, err
+	}
+	return payment, nil
 }
