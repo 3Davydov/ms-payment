@@ -13,8 +13,6 @@ import (
 func (a Adapter) Create(ctx context.Context, request *payment.CreatePaymentRequest) (*payment.CreatePaymentResponse, error) {
 	newPayment := domain.NewPayment(request.UserId, request.OrderId, request.TotalPrice)
 	result, err := a.api.Charge(ctx, newPayment)
-	fmt.Println("RESULT :")
-	fmt.Println(result.ID)
 	if err != nil {
 		return nil, status.New(codes.Internal, fmt.Sprintf("failed to charge. %v ", err)).Err()
 	}

@@ -8,4 +8,5 @@ import (
 
 type DBPort interface {
 	Save(ctx context.Context, payment *domain.Payment) error
+	Get(ctx context.Context, id string) (domain.Payment, error)
 }

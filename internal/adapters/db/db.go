@@ -35,7 +35,7 @@ func NewAdapter(dataSourceUrl string) (*Adapter, error) {
 	return &Adapter{db: db}, nil
 }
 
-func (a *Adapter) Save(ctx context.Context, payment *domain.Payment) error {
+func (a Adapter) Save(ctx context.Context, payment *domain.Payment) error {
 	orderModel := Payment{
 		CustomerID: payment.CustomerID,
 		Status:     payment.Status,
@@ -47,4 +47,18 @@ func (a *Adapter) Save(ctx context.Context, payment *domain.Payment) error {
 		payment.ID = int64(orderModel.ID)
 	}
 	return res.Error
+}
+
+func (a Adapter) Get(ctx context.Context, id string) (domain.Payment, error) {
+	var paymentEntity Payment
+	res := a.db.WithContext(ctx).First(&paymentEntity, id)
+	payment := domain.Payment{
+		ID:         int64(paymentEntity.ID),
+		CustomerID: paymentEntity.CustomerID,
+		Status:     paymentEntity.Status,
+		OrderId:    paymentEntity.OrderID,
+		TotalPrice: paymentEntity.TotalPrice,
+		CreatedAt:  paymentEntity.CreatedAt.UnixNano(),
+	}
+	return payment, res.Error
 }
